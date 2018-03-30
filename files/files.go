@@ -2,14 +2,13 @@ package files
 
 import (
 	"fmt"
-	"path/filepath"
 	"os"
+	"path/filepath"
 )
 
+func List(path string) ([]IFile, error) {
 
-func List(path string) ([]File, error) {
-
-	files := make([]File, 0)
+	files := make([]IFile, 0)
 
 	isAbs := filepath.IsAbs(path)
 
@@ -17,11 +16,11 @@ func List(path string) ([]File, error) {
 	if !isAbs {
 		path, err = filepath.Abs(path)
 	}
-	
+
 	if err == nil {
 		err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 			if err == nil {
-				files = append(files, File{
+				files = append(files, IFile{
 					path,
 				})
 			} else {

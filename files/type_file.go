@@ -1,24 +1,28 @@
 package files
 
 import (
-	"os"
+	"errors"
 	"fmt"
+	"os"
 )
 
-type File struct{
+type IFile struct {
 	path string
 }
 
-func (f File) ToString() string {
+func (f IFile) ToString() string {
 	return f.path
 }
 
-func (f File) Open() (*os.File, error) {
-	file, err := os.Open(f.path)
-	return file, err
+func (f IFile) Open() (*os.File, error) {
+	if f.Exists() {
+		file, err := os.Open(f.path)
+		return file, err
+	}
+	return nil, errors.New("file doesn't exist")
 }
 
-func (f File) Delete() error {
+func (f IFile) Delete() error {
 	err := os.Remove(f.path)
 	if err != nil {
 		fmt.Println("couldn't delete file:", f.path)
@@ -28,3 +32,20 @@ func (f File) Delete() error {
 	return err
 }
 
+func (f IFile) Create() (*os.File, error) {
+	if !f.Exists() {
+		var file, err = os.Create(f.path)
+		if err != nil {
+			fmt.Println("error while creating file", f.path)
+			fmt.Println("error message", err.Error())
+		}
+		defer file.Close()
+		return file, err
+	}
+	return nil, nil
+}
+
+func (f IFile) Exists() bool {
+	_, err := os.Stat(f.path)
+	return os.IsExist(err)
+}
