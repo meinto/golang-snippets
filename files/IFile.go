@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 type IFile struct {
@@ -17,6 +18,7 @@ func (f IFile) ToString() string {
 func (f IFile) Open() (*os.File, error) {
 	if f.Exists() {
 		file, err := os.Open(f.path)
+		defer file.Close()
 		return file, err
 	}
 	return nil, errors.New("file doesn't exist")
@@ -48,4 +50,57 @@ func (f IFile) Create() (*os.File, error) {
 func (f IFile) Exists() bool {
 	_, err := os.Stat(f.path)
 	return os.IsExist(err)
+}
+
+/**
+ * ROADMAP
+ */
+func (f IFile) IsDir() bool {
+	// TODO
+	return false
+}
+
+func (f IFile) Type() string {
+	// TODO: error if is dir
+	return filepath.Ext(f.path)
+}
+
+func (f IFile) Name() string {
+	// TODO
+	return ""
+}
+
+func (f IFile) Rename() (IFile, error) {
+	// TODO
+	return f, nil
+}
+
+func (f IFile) Write(content string) error {
+	// TODO
+	return nil
+}
+
+func (f IFile) Append(content string) error {
+	// TODO
+	return nil
+}
+
+func (f IFile) Clear() error {
+	// TODO
+	return nil
+}
+
+func (f IFile) NumberOfLines() int {
+	// TODO
+	return -1
+}
+
+func (f IFile) ReadLine(number int) (string, error) {
+	// TODO
+	return "", nil
+}
+
+func (f IFile) ReadLines(from int, to int) (string, error) {
+	// TODO
+	return "", nil
 }
