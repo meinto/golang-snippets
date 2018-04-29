@@ -18,7 +18,6 @@ func (f IFile) ToString() string {
 func (f IFile) Open() (*os.File, error) {
 	if f.Exists() {
 		file, err := os.Open(f.path)
-		defer file.Close()
 		return file, err
 	}
 	return nil, errors.New("file doesn't exist")
@@ -41,7 +40,6 @@ func (f IFile) Create() (*os.File, error) {
 			fmt.Println("error while creating file", f.path)
 			fmt.Println("error message", err.Error())
 		}
-		defer file.Close()
 		return file, err
 	}
 	return nil, nil
@@ -49,20 +47,37 @@ func (f IFile) Create() (*os.File, error) {
 
 func (f IFile) Exists() bool {
 	_, err := os.Stat(f.path)
-	return os.IsExist(err)
+	if err != nil {
+		fmt.Println("IFile.Exists()", err)
+	}
+	return !os.IsExist(err)
 }
 
 func (f IFile) Name() string {
 	return filepath.Base(f.path)
 }
 
+func (f IFile) IsDir() (bool, error) {
+	file, openError := f.Open()
+	defer file.Close()
+	if openError != nil {
+		return false, openError
+	}
+	fi, err := file.Stat()
+	switch {
+	case err != nil:
+		return false, err
+	case fi.IsDir():
+		return true, nil
+	default:
+		return false, nil
+	}
+	return false, nil
+}
+
 /**
  * ROADMAP
  */
-func (f IFile) IsDir() bool {
-	// TODO
-	return false
-}
 
 func (f IFile) Type() string {
 	// TODO: error if is dir
