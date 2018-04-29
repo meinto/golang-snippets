@@ -52,6 +52,10 @@ func (f IFile) Exists() bool {
 	return os.IsExist(err)
 }
 
+func (f IFile) Name() string {
+	return filepath.Base(f.path)
+}
+
 /**
  * ROADMAP
  */
@@ -63,11 +67,6 @@ func (f IFile) IsDir() bool {
 func (f IFile) Type() string {
 	// TODO: error if is dir
 	return filepath.Ext(f.path)
-}
-
-func (f IFile) Name() string {
-	// TODO
-	return ""
 }
 
 func (f IFile) Rename() (IFile, error) {
