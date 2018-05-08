@@ -55,7 +55,7 @@ func (f *File) Exists() bool {
 	if err != nil {
 		fmt.Println("File.Exists()", err)
 	}
-	return !os.IsExist(err)
+	return err == nil
 }
 
 func (f *File) Name() string {
