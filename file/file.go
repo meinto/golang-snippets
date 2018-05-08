@@ -1,4 +1,4 @@
-package files
+package file
 
 import (
 	"errors"
@@ -7,15 +7,20 @@ import (
 	"path/filepath"
 )
 
-type IFile struct {
+type File struct {
 	path string
 }
 
-func (f IFile) ToString() string {
+func New(path string) *File {
+	file := File{path}
+	return &file
+}
+
+func (f *File) ToString() string {
 	return f.path
 }
 
-func (f IFile) Open() (*os.File, error) {
+func (f *File) Open() (*os.File, error) {
 	if f.Exists() {
 		file, err := os.Open(f.path)
 		return file, err
@@ -23,7 +28,7 @@ func (f IFile) Open() (*os.File, error) {
 	return nil, errors.New("file doesn't exist")
 }
 
-func (f IFile) Delete() error {
+func (f *File) Delete() error {
 	err := os.Remove(f.path)
 	if err != nil {
 		fmt.Println("couldn't delete file:", f.path)
@@ -33,7 +38,7 @@ func (f IFile) Delete() error {
 	return err
 }
 
-func (f IFile) Create() (*os.File, error) {
+func (f *File) Create() (*os.File, error) {
 	if !f.Exists() {
 		var file, err = os.Create(f.path)
 		if err != nil {
@@ -45,19 +50,19 @@ func (f IFile) Create() (*os.File, error) {
 	return nil, nil
 }
 
-func (f IFile) Exists() bool {
+func (f *File) Exists() bool {
 	_, err := os.Stat(f.path)
 	if err != nil {
-		fmt.Println("IFile.Exists()", err)
+		fmt.Println("File.Exists()", err)
 	}
 	return !os.IsExist(err)
 }
 
-func (f IFile) Name() string {
+func (f *File) Name() string {
 	return filepath.Base(f.path)
 }
 
-func (f IFile) IsDir() (bool, error) {
+func (f *File) IsDir() (bool, error) {
 	file, openError := f.Open()
 	defer file.Close()
 	if openError != nil {
@@ -79,42 +84,42 @@ func (f IFile) IsDir() (bool, error) {
  * ROADMAP
  */
 
-func (f IFile) Type() string {
+func (f *File) Type() string {
 	// TODO: error if is dir
 	return filepath.Ext(f.path)
 }
 
-func (f IFile) Rename() (IFile, error) {
+func (f *File) Rename() (*File, error) {
 	// TODO
 	return f, nil
 }
 
-func (f IFile) Write(content string) error {
+func (f *File) Write(content string) error {
 	// TODO
 	return nil
 }
 
-func (f IFile) Append(content string) error {
+func (f *File) Append(content string) error {
 	// TODO
 	return nil
 }
 
-func (f IFile) Clear() error {
+func (f *File) Clear() error {
 	// TODO
 	return nil
 }
 
-func (f IFile) NumberOfLines() int {
+func (f *File) NumberOfLines() int {
 	// TODO
 	return -1
 }
 
-func (f IFile) ReadLine(number int) (string, error) {
+func (f *File) ReadLine(number int) (string, error) {
 	// TODO
 	return "", nil
 }
 
-func (f IFile) ReadLines(from int, to int) (string, error) {
+func (f *File) ReadLines(from int, to int) (string, error) {
 	// TODO
 	return "", nil
 }

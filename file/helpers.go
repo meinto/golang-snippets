@@ -1,4 +1,4 @@
-package files
+package file
 
 import (
 	"fmt"
@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 )
 
-func List(path string) ([]IFile, error) {
+func List(path string) ([]File, error) {
 
-	files := make([]IFile, 0)
+	files := make([]File, 0)
 
 	isAbs := filepath.IsAbs(path)
 
@@ -20,7 +20,7 @@ func List(path string) ([]IFile, error) {
 	if err == nil {
 		err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 			if err == nil {
-				files = append(files, IFile{
+				files = append(files, File{
 					path,
 				})
 			} else {
