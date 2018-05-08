@@ -80,6 +80,14 @@ func (f *File) IsDir() (bool, error) {
 	return false, nil
 }
 
+func (f *File) IsImage() bool {
+	fileExtension := filepath.Ext(f.path)
+	return (fileExtension == ".jpg" ||
+		fileExtension == ".jpeg" ||
+		fileExtension == ".png" ||
+		fileExtension == ".gif")
+}
+
 /**
  * ROADMAP
  */
